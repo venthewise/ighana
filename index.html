@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IG Automation Tool (HANA)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: #111111;
+      --bg-tertiary: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --accent: #ffffff;
+      --border: #333333;
+      --error: #ff4444;
+      --success: #44ff44;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      width: 100%;
+    }
+
+    header {
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    main {
+      flex: 1;
+      padding: 20px 0 60px;
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .instructions-panel {
+      position: sticky;
+      top: 20px;
+      height: fit-content;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      background-color: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 600px;
+      min-height: 120px;
+      padding: 20px;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+      resize: vertical;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 250px;
+      padding: 15px 20px;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    textarea::placeholder, input[type="text"]::placeholder {
+      color: var(--text-secondary);
+    }
+
+    button {
+      padding: 15px 30px;
+      background-color: var(--accent);
+      color: var(--bg-primary);
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .button-secondary {
+      background-color: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--accent);
+      color: var(--bg-primary);
+    }
+
+    .caption-item, .image-item {
+      border: 2px solid var(--border);
+      padding: 15px;
+      margin: 8px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      background-color: var(--bg-tertiary);
+    }
+
+    .caption-item:hover, .image-item:hover {
+      border-color: var(--text-secondary);
+      transform: translateY(-2px);
+    }
+
+    .caption-item.selected, .image-item.selected {
+      border-color: var(--accent);
+      background-color: var(--bg-secondary);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .caption-item {
+      display: inline-block;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+
+    .image-item {
+      display: inline-block;
+      padding: 10px;
+    }
+
+    img {
+      max-width: 200px;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      justify-items: center;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message, .success-message {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .error-message {
+      background-color: rgba(255, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    .success-message {
+      background-color: rgba(68, 255, 68, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .error-message.active, .success-message.active {
+      display: block;
+    }
+
+    .submit-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .refresh-section {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .disabled-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: 12px;
+    }
+
+    .disabled-message {
+      background-color: var(--bg-secondary);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .disabled-message .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .disabled-message h4 {
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .disabled-message p {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+
+    .section.disabled {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    footer {
+      background-color: var(--bg-secondary);
+      padding: 30px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .instructions-panel {
+        position: static;
+        order: -1;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .section {
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      .input-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input[type="text"] {
+        min-width: 100%;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      img {
+        max-width: 100%;
+      }
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .selection-counter {
+      background-color: var(--bg-tertiary);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .pending-posts {
+      margin-top: 60px;
+    }
+
+    .pending-posts h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .posts-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .posts-table th,
+    .posts-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .posts-table th {
+      background-color: var(--bg-tertiary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .posts-table td {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .posts-table tbody tr:hover {
+      background-color: var(--bg-tertiary);
+    }
+
+    .posts-table a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .posts-table a:hover {
+      text-decoration: underline;
+    }
+
+    .no-posts {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .time-info {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: var(--bg-tertiary);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .time-info p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .instructions-panel {
+      background-color: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 25px;
+      border: 1px solid var(--border);
+    }
+
+    .instructions-panel h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+
+    .instructions-panel .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+
+    .step {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background-color: var(--accent);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 10px;
+    }
+
+    .step-title {
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: var(--text-primary);
+    }
+
+    .step-description {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .workflow-diagram {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: var(--bg-tertiary);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .workflow-diagram strong {
+      color: var(--accent);
+    }
+
+    .desktop-notice {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+    }
+
+    .desktop-notice .icon {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .desktop-notice strong {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>IG Automation Tool (HANA)</h1>
+      <p class="subtitle">Generate and select Instagram content with AI</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="main-content">
+      <div class="container">
+        <div class="section">
+        <h2 class="section-title">
+          📝 Content Generation
+        </h2>
+        <div class="input-group">
+          <textarea id="topic" placeholder="Enter your topic or idea..."></textarea>
+          <button id="generate">
+            <span>Generate</span>
+          </button>
+        </div>
+        <div class="error-message" id="generateError"></div>
+        <div class="success-message" id="generateSuccess"></div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">
+          💬 Choose a Caption
+          <span class="selection-counter" id="captionCounter">0 selected</span>
+        </h2>
+        <div class="loading" id="captionsLoading">
+          <div class="spinner"></div>
+          <p>Generating captions...</p>
+        </div>
+        <div class="empty-state" id="captionsEmpty">
+          Enter a topic and click Generate to see caption options
+        </div>
+        <div id="captions" class="content-grid"></div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">
+          🖼️ Choose an Image
+          <span class="selection-counter" id="imageCounter">0 selected</span>
+        </h2>
+        <div class="loading" id="imagesLoading">
+          <div class="spinner"></div>
+          <p>Generating images...</p>
+        </div>
+        <div class="empty-state" id="imagesEmpty">
+          Enter a topic and click Generate to see image options
+        </div>
+        <div id="images" class="content-grid"></div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">
+          ⏰ Choose Posting Time
+          <span class="selection-counter" id="timeCounter">0 selected</span>
+        </h2>
+        <div class="time-info">
+          <p>Current Time in Philippines: <span id="timePH"></span></p>
+          <p>Current Time in Japan: <span id="timeJP"></span></p>
+        </div>
+        <div class="input-group">
+          <label for="schedulePicker">Select posting time:</label>
+          <input type="datetime-local" id="schedulePicker">
+        </div>
+      </div>
+
+      <div class="submit-section">
+        <button id="submit" disabled>
+          Submit Selection
+        </button>
+        <div class="error-message" id="submitError"></div>
+        <div class="success-message" id="submitSuccess"></div>
+      </div>
+
+      <div class="refresh-section" id="refreshSection">
+        <button id="refreshBtn" onclick="location.reload()">
+          🔄 Generate New Content
+        </button>
+      </div>
+
+      <div class="section pending-posts">
+        <h2>📋 PENDING INSTAGRAM POSTS</h2>
+        
+        <table class="posts-table">
+          
+          <thead>
+            <p>( Sample data only )</p><br>
+            <tr>
+              <th>Date Generated</th>
+              <th>Caption</th>
+              <th>Image Link</th>
+              <th>Post Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2025-10-10 08:30:00</td>
+              <td>Exploring the vibrant streets of Tokyo at night 🌃✨</td>
+              <td><a href="https://zzz1uzz.com/image1.jpg" target="_blank">View Image</a></td>
+              <td>2025-10-10 15:00:00</td>
+            </tr>
+            <tr>
+              <td>2025-10-09 14:20:00</td>
+              <td>Coffee and creativity in the morning ☕🎨</td>
+              <td><a href="https://zzz1uzz.com/image2.jpg" target="_blank">View Image</a></td>
+              <td>2025-10-11 09:30:00</td>
+            </tr>
+            <tr>
+              <td>2025-10-08 16:45:00</td>
+              <td>Sunset vibes and good times 🌅😊</td>
+              <td><a href="https://zzz1uzz.com/image3.jpg" target="_blank">View Image</a></td>
+              <td>2025-10-12 18:00:00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      </div>
+    </div>
+
+    <div class="instructions-panel">
+      <h3>🚀 How It Works (DEMO)</h3>
+      <p class="subtitle">Complete step-by-step guide to automate your Instagram posting</p>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">1</span>
+          Enter Your Topic
+        </div>
+        <div class="step-description">
+          Start by entering a topic or idea in the text area. This will be used to generate relevant captions and images.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">2</span>
+          Generate Content
+        </div>
+        <div class="step-description">
+          Click "Generate" to send your topic to our AI system. The N8N backend will process your request and create multiple caption options and images.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">3</span>
+          Select Content
+        </div>
+        <div class="step-description">
+          Choose one caption and one image from the generated options. Both selections are required before you can proceed to scheduling.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">4</span>
+          Schedule Posting
+        </div>
+        <div class="step-description">
+          Pick a future date and time for your Instagram post. The system will automatically post on schedule.
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title">
+          <span class="step-number">5</span>
+          Note for this Version
+        </div>
+        <div class="step-description">
+          For direct demo of the workflow, the scheduling logic has not been implemented yet. It will be available on the next demo version.
+        </div>
+      </div>
+
+      <div class="workflow-diagram">
+        <strong>Workflow:</strong><br>
+        User Input → N8N Backend → AI Content Generation → User Selection → Scheduling → Instagram Posting
+      </div>
+
+      <div class="desktop-notice">
+        <div class="icon">💻</div>
+        <strong>Desktop Recommended:</strong><br>
+        For the best experience, it's recommended using this demo on a desktop computer. Mobile optimization will be implemented in Prod if needed. - Paolo
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <p>Demo Version: IG Automation Tool - Made by Paolo L.</p>
+      </div>
+    </div>
+  </footer>
+
+
+
+<script>
+let selectedCaption = null;
+let selectedImage = null;
+let selectedSchedule = null;
+
+// ===========================
+// ⏳ Display Current Time
+// ===========================
+function updateCurrentTime() {
+  const nowPH = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', hour12: false });
+  const nowJP = new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo', hour12: false });
+  
+  document.getElementById('timePH').textContent = nowPH;
+  document.getElementById('timeJP').textContent = nowJP;
+}
+setInterval(updateCurrentTime, 1000);
+updateCurrentTime();
+
+// ===========================
+// 🟩 Utility Functions
+// ===========================
+function showLoading(elementId) {
+  document.getElementById(elementId).classList.add('active');
+}
+
+function hideLoading(elementId) {
+  document.getElementById(elementId).classList.remove('active');
+}
+
+function showError(elementId, message) {
+  const element = document.getElementById(elementId);
+  element.textContent = message;
+  element.classList.add('active');
+  setTimeout(() => element.classList.remove('active'), 5000);
+}
+
+function showSuccess(elementId, message) {
+  const element = document.getElementById(elementId);
+  element.textContent = message;
+  element.classList.add('active');
+  setTimeout(() => element.classList.remove('active'), 3000);
+}
+
+function updateCounters() {
+  document.getElementById('captionCounter').textContent = selectedCaption ? '1 selected' : '0 selected';
+  document.getElementById('imageCounter').textContent = selectedImage ? '1 selected' : '0 selected';
+  document.getElementById('timeCounter').textContent = selectedSchedule ? '1 selected' : '0 selected';
+}
+
+function checkSubmitEnabled() {
+  document.getElementById('submit').disabled = !(selectedCaption && selectedImage && selectedSchedule);
+}
+
+function resetContent() {
+  document.getElementById('captions').innerHTML = '';
+  document.getElementById('images').innerHTML = '';
+  selectedCaption = null;
+  selectedImage = null;
+  selectedSchedule = null;
+  document.getElementById('schedulePicker').value = '';
+  document.getElementById('submit').disabled = true;
+  updateCounters();
+
+  // Show empty states
+  document.getElementById('captionsEmpty').style.display = 'block';
+  document.getElementById('imagesEmpty').style.display = 'block';
+}
+
+// Initialize time counter
+updateCounters();
+
+// ===========================
+// 📅 Schedule Picker Listener
+// ===========================
+document.getElementById('schedulePicker').addEventListener('change', (e) => {
+  selectedSchedule = e.target.value;
+  checkSubmitEnabled();
+});
+
+// ===========================
+// 🚀 Generate Button
+// ===========================
+document.getElementById('generate').addEventListener('click', async () => {
+  const topic = document.getElementById('topic').value.trim();
+  
+  if (!topic) {
+    showError('generateError', 'Please enter a topic to generate content');
+    return;
+  }
+
+  resetContent();
+
+  document.getElementById('captionsEmpty').style.display = 'none';
+  document.getElementById('imagesEmpty').style.display = 'none';
+  showLoading('captionsLoading');
+  showLoading('imagesLoading');
+
+  try {
+    const res = await fetch('https://n8nai.ai8mations.com/webhook/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ topic })
+    });
+
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+    const data = await res.json();
+
+    hideLoading('captionsLoading');
+    hideLoading('imagesLoading');
+
+    if (!data.captions || !data.images) throw new Error('Invalid response format from server');
+
+    // Captions
+    const captionsContainer = document.getElementById('captions');
+    data.captions.forEach(caption => {
+      const div = document.createElement('div');
+      div.className = 'caption-item';
+      div.textContent = caption;
+      div.addEventListener('click', () => {
+        document.querySelectorAll('.caption-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedCaption = caption;
+        updateCounters();
+        checkSubmitEnabled();
+      });
+      captionsContainer.appendChild(div);
+    });
+
+    // Images
+    const imagesContainer = document.getElementById('images');
+    data.images.forEach(imgUrl => {
+      const div = document.createElement('div');
+      div.className = 'image-item';
+      const img = document.createElement('img');
+      img.src = imgUrl;
+      img.alt = 'Generated image';
+      img.onerror = () => {
+        img.style.display = 'none';
+        div.innerHTML += '<p style="color: var(--error);">Image failed to load</p>';
+      };
+      div.appendChild(img);
+      div.addEventListener('click', () => {
+        document.querySelectorAll('.image-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedImage = imgUrl;
+        updateCounters();
+        checkSubmitEnabled();
+      });
+      imagesContainer.appendChild(div);
+    });
+
+    showSuccess('generateSuccess', 'Content generated successfully!');
+    
+  } catch (error) {
+    console.error('Generation error:', error);
+    hideLoading('captionsLoading');
+    hideLoading('imagesLoading');
+    showError('generateError', `Failed to generate content: ${error.message}`);
+    document.getElementById('captionsEmpty').style.display = 'block';
+    document.getElementById('imagesEmpty').style.display = 'block';
+  }
+});
+
+// ===========================
+// 📤 Submit Button
+// ===========================
+document.getElementById('submit').addEventListener('click', async () => {
+  if (!selectedCaption || !selectedImage || !selectedSchedule) {
+    showError('submitError', 'Please select a caption, an image, and a schedule');
+    return;
+  }
+
+  // Convert schedule to ISO 8601
+  const scheduleISO = new Date(selectedSchedule).toISOString();
+
+  const payload = {
+    caption: selectedCaption,
+    imageUrl: selectedImage,
+    postTime: scheduleISO
+  };
+
+  console.log('Sending selection:', payload);
+
+  try {
+    const res = await fetch('https://n8nai.ai8mations.com/webhook-test/selection1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      showSuccess('submitSuccess', 'Caption and image submitted for posting! Refresh the page to generate new content.');
+      disableInterfaceAfterSubmission();
+    } else {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+  } catch (error) {
+    console.error('Submission error:', error);
+    showError('submitError', `Failed to submit selection: ${error.message}`);
+  }
+});
+
+// ===========================
+// 🚫 Disable Interface After Submission
+// ===========================
+function disableInterfaceAfterSubmission() {
+  // Disable all sections
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(section => {
+    section.classList.add('disabled');
+  });
+
+  // Hide submit section and show refresh section
+  document.getElementById('submit').style.display = 'none';
+  document.getElementById('refreshSection').style.display = 'block';
+
+  // Add disabled overlay to main sections
+  const mainSections = document.querySelectorAll('.section:not(.pending-posts)');
+  mainSections.forEach(section => {
+    const overlay = document.createElement('div');
+    overlay.className = 'disabled-overlay';
+    overlay.innerHTML = `
+      <div class="disabled-message">
+        <div class="icon">✅</div>
+        <h4>Content Submitted</h4>
+        <p>Your Instagram post has been scheduled for automated publishing.</p>
+      </div>
+    `;
+    section.appendChild(overlay);
+  });
+}
+
+// Initialize empty states
+document.getElementById('captionsEmpty').style.display = 'block';
+document.getElementById('imagesEmpty').style.display = 'block';
+
+// ===========================
+// 🚨 Browser Close/Refresh Warning
+// ===========================
+window.addEventListener('beforeunload', function(e) {
+  // Check if there's any data that would be lost
+  const hasTopic = document.getElementById('topic').value.trim();
+  const hasSelections = selectedCaption || selectedImage || selectedSchedule;
+
+  if (hasTopic || hasSelections) {
+    // Cancel the event
+    e.preventDefault();
+    // Chrome requires returnValue to be set
+    e.returnValue = '';
+
+    // Show custom confirmation dialog
+    const userChoice = confirm(
+      '⚠️ WARNING: You are about to leave this page!\n\n' +
+      'All current data including:\n' +
+      '• Entered topic\n' +
+      '• Generated captions and images\n' +
+      '• Selected content\n' +
+      '• Scheduled posting time\n\n' +
+      'Will be permanently deleted and reset.\n\n' +
+      'Click "OK" to continue and lose all data, or "Cancel" to stay on this page.'
+    );
+
+    // If user clicks Cancel, prevent the navigation
+    if (!userChoice) {
+      return false;
+    }
+  }
+});
+</script>
+
+</body>
+</html>
