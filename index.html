@@ -816,6 +816,23 @@ function showSuccess(elementId, message) {
   setTimeout(() => element.classList.remove('active'), 3000);
 }
 
+function showLoadingMessage(elementId, message) {
+  const element = document.getElementById(elementId);
+  element.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
+      <span>${message}</span>
+    </div>
+  `;
+  element.classList.add('active');
+}
+
+function hideLoadingMessage(elementId) {
+  const element = document.getElementById(elementId);
+  element.classList.remove('active');
+  element.innerHTML = '';
+}
+
 function updateCounters() {
   document.getElementById('captionCounter').textContent = selectedCaption ? '1 selected' : '0 selected';
   document.getElementById('imageCounter').textContent = selectedImage ? '1 selected' : '0 selected';
@@ -946,6 +963,15 @@ document.getElementById('submit').addEventListener('click', async () => {
     return;
   }
 
+  // Show loading state
+  const submitBtn = document.getElementById('submit');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<span>⏳ Submitting...</span>';
+  submitBtn.disabled = true;
+
+  // Show loading message
+  showLoadingMessage('submitSuccess', 'Submitting your Instagram post...');
+
   // Convert schedule to ISO 8601
   const scheduleISO = new Date(selectedSchedule).toISOString();
 
@@ -964,6 +990,10 @@ document.getElementById('submit').addEventListener('click', async () => {
       body: JSON.stringify(payload)
     });
 
+    // Clear loading state
+    submitBtn.innerHTML = originalText;
+    hideLoadingMessage('submitSuccess');
+
     if (res.ok) {
       showSuccess('submitSuccess', 'Caption and image submitted for posting! Refresh the page to generate new content.');
       disableInterfaceAfterSubmission();
@@ -972,6 +1002,12 @@ document.getElementById('submit').addEventListener('click', async () => {
     }
   } catch (error) {
     console.error('Submission error:', error);
+
+    // Clear loading state
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
+    hideLoadingMessage('submitSuccess');
+
     showError('submitError', `Failed to submit selection: ${error.message}`);
   }
 });
