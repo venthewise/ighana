@@ -151,10 +151,10 @@
     }
 
     .hero .container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 60px;
-      align-items: start;
       max-width: 1200px;
       padding: 0 40px;
     }
@@ -1200,28 +1200,6 @@
         </div>
       </div>
 
-      <div class="login-form">
-        <h3>Welcome Back</h3>
-        <p class="subtitle">Sign in to access your dashboard</p>
-
-        <form id="loginForm">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" placeholder="Enter your username" required>
-          </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" required>
-          </div>
-
-          <button type="submit" class="login-btn">Sign In</button>
-        </form>
-
-        <div class="login-links">
-          <a href="#forgot">Forgot password?</a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1230,10 +1208,10 @@
   <div id="loginModal" class="login-modal">
     <div class="login-modal-content">
       <button class="login-modal-close" id="loginModalClose">&times;</button>
-      <h2>Welcome Back</h2>
-      <p class="subtitle">Sign in to access your HANA dashboard</p>
+      <h2>Welcome Back!</h2>
+      <p class="subtitle">Sign in to access your HANA dashboard<br>(For future implementation.)</p>
 
-      <form class="login-form" id="loginForm">
+      <form class="login-form" id="loginModalForm">
         <div class="form-group">
           <label for="loginUsername">Username</label>
           <input type="text" id="loginUsername" required>
@@ -1243,7 +1221,7 @@
           <label for="loginPassword">Password</label>
           <input type="password" id="loginPassword" required>
         </div>
-
+        
         <button type="submit" class="login-btn" id="loginBtn">
           <span id="loginBtnText">Sign In</span>
         </button>
@@ -1276,378 +1254,62 @@ document.addEventListener('DOMContentLoaded', function() {
   const loginModal = document.getElementById('loginModal');
   const loginModalClose = document.getElementById('loginModalClose');
   const loginBtn = document.querySelector('.cta-button');
-  const loginForm = document.getElementById('loginForm');
-  const loginBtnText = document.getElementById('loginBtnText');
-  const loginError = document.getElementById('loginError');
+  const loginModalForm = document.getElementById('loginModalForm');
 
   // Open login modal
-  loginBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    loginModal.classList.add('active');
-  });
+  if (loginBtn) {
+    loginBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (loginModal) {
+        loginModal.classList.add('active');
+      }
+    });
+  }
 
   // Close login modal
-  loginModalClose.addEventListener('click', function() {
-    loginModal.classList.remove('active');
-    loginError.classList.remove('active');
-    loginForm.reset();
-  });
+  if (loginModalClose) {
+    loginModalClose.addEventListener('click', function() {
+      if (loginModal) {
+        loginModal.classList.remove('active');
+      }
+      const loginError = document.getElementById('loginError');
+      if (loginError) {
+        loginError.classList.remove('active');
+      }
+      if (loginModalForm) {
+        loginModalForm.reset();
+      }
+    });
+  }
 
   // Close modal when clicking outside
-  loginModal.addEventListener('click', function(e) {
-    if (e.target === loginModal) {
-      loginModal.classList.remove('active');
-      loginError.classList.remove('active');
-      loginForm.reset();
-    }
-  });
+  if (loginModal) {
+    loginModal.addEventListener('click', function(e) {
+      if (e.target === loginModal) {
+        loginModal.classList.remove('active');
+        const loginError = document.getElementById('loginError');
+        if (loginError) {
+          loginError.classList.remove('active');
+        }
+        if (loginModalForm) {
+          loginModalForm.reset();
+        }
+      }
+    });
+  }
 
-  // Login form submission
-  loginForm.addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('loginPassword').value;
-
-    // Show loading state
-    loginBtnText.textContent = 'Signing In...';
-    loginForm.querySelector('.login-btn').disabled = true;
-    loginError.classList.remove('active');
-
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Token is now stored in HTTP-only cookie by server
-        // Just redirect to dashboard (middleware will verify the cookie)
-        window.location.href = 'dashboard.html';
-      } else {
-        // Show error
-        loginError.textContent = data.error || 'Login failed';
+  // Prevent form submission
+  if (loginModalForm) {
+    loginModalForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Since login is disabled, we just prevent the default action.
+      // You could optionally show a message here.
+      const loginError = document.getElementById('loginError');
+      if (loginError) {
+        loginError.textContent = 'Login functionality is currently disabled.';
         loginError.classList.add('active');
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      loginError.textContent = 'Network error. Please try again.';
-      loginError.classList.add('active');
-    } finally {
-      // Reset loading state
-      loginBtnText.textContent = 'Sign In';
-      loginForm.querySelector('.login-btn').disabled = false;
-    }
-  });
-});
-
-let selectedCaption = null;
-let selectedImage = null;
-let selectedSchedule = null;
-
-// ===========================
-// ⏳ Display Current Time
-// ===========================
-function updateCurrentTime() {
-  const nowPH = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', hour12: false });
-  const nowJP = new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo', hour12: false });
-  
-  document.getElementById('timePH').textContent = nowPH;
-  document.getElementById('timeJP').textContent = nowJP;
-}
-setInterval(updateCurrentTime, 1000);
-updateCurrentTime();
-
-// ===========================
-// 🟩 Utility Functions
-// ===========================
-function showLoading(elementId) {
-  document.getElementById(elementId).classList.add('active');
-}
-
-function hideLoading(elementId) {
-  document.getElementById(elementId).classList.remove('active');
-}
-
-function showError(elementId, message) {
-  const element = document.getElementById(elementId);
-  element.textContent = message;
-  element.classList.add('active');
-  setTimeout(() => element.classList.remove('active'), 5000);
-}
-
-function showSuccess(elementId, message) {
-  const element = document.getElementById(elementId);
-  element.textContent = message;
-  element.classList.add('active');
-  setTimeout(() => element.classList.remove('active'), 3000);
-}
-
-function showLoadingMessage(elementId, message) {
-  const element = document.getElementById(elementId);
-  element.innerHTML = `
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
-      <span>${message}</span>
-    </div>
-  `;
-  element.classList.add('active');
-}
-
-function hideLoadingMessage(elementId) {
-  const element = document.getElementById(elementId);
-  element.classList.remove('active');
-  element.innerHTML = '';
-}
-
-function updateCounters() {
-  document.getElementById('captionCounter').textContent = selectedCaption ? '1 selected' : '0 selected';
-  document.getElementById('imageCounter').textContent = selectedImage ? '1 selected' : '0 selected';
-  document.getElementById('timeCounter').textContent = selectedSchedule ? '1 selected' : '0 selected';
-}
-
-function checkSubmitEnabled() {
-  document.getElementById('submit').disabled = !(selectedCaption && selectedImage && selectedSchedule);
-}
-
-function resetContent() {
-  document.getElementById('captions').innerHTML = '';
-  document.getElementById('images').innerHTML = '';
-  selectedCaption = null;
-  selectedImage = null;
-  selectedSchedule = null;
-  document.getElementById('schedulePicker').value = '';
-  document.getElementById('submit').disabled = true;
-  updateCounters();
-
-  // Show empty states
-  document.getElementById('captionsEmpty').style.display = 'block';
-  document.getElementById('imagesEmpty').style.display = 'block';
-}
-
-// Initialize time counter
-updateCounters();
-
-// ===========================
-// 📅 Schedule Picker Listener
-// ===========================
-document.getElementById('schedulePicker').addEventListener('change', (e) => {
-  selectedSchedule = e.target.value;
-  checkSubmitEnabled();
-});
-
-// ===========================
-// 🚀 Generate Button
-// ===========================
-document.getElementById('generate').addEventListener('click', async () => {
-  const topic = document.getElementById('topic').value.trim();
-  
-  if (!topic) {
-    showError('generateError', 'Please enter a topic to generate content');
-    return;
-  }
-
-  resetContent();
-
-  document.getElementById('captionsEmpty').style.display = 'none';
-  document.getElementById('imagesEmpty').style.display = 'none';
-  showLoading('captionsLoading');
-  showLoading('imagesLoading');
-
-  try {
-    const res = await fetch('https://n8nai.ai8mations.com/webhook-test/aoigenerate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ topic })
     });
-
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-    const data = await res.json();
-
-    hideLoading('captionsLoading');
-    hideLoading('imagesLoading');
-
-    if (!data.captions || !data.images) throw new Error('Invalid response format from server');
-
-    // Captions
-    const captionsContainer = document.getElementById('captions');
-    data.captions.forEach(caption => {
-      const div = document.createElement('div');
-      div.className = 'caption-item';
-      div.textContent = caption;
-      div.addEventListener('click', () => {
-        document.querySelectorAll('.caption-item').forEach(el => el.classList.remove('selected'));
-        div.classList.add('selected');
-        selectedCaption = caption;
-        updateCounters();
-        checkSubmitEnabled();
-      });
-      captionsContainer.appendChild(div);
-    });
-
-    // Images
-    const imagesContainer = document.getElementById('images');
-    data.images.forEach(imgUrl => {
-      const div = document.createElement('div');
-      div.className = 'image-item';
-      const img = document.createElement('img');
-      img.src = imgUrl;
-      img.alt = 'Generated image';
-      img.onerror = () => {
-        img.style.display = 'none';
-        div.innerHTML += '<p style="color: var(--error);">Image failed to load</p>';
-      };
-      div.appendChild(img);
-      div.addEventListener('click', () => {
-        document.querySelectorAll('.image-item').forEach(el => el.classList.remove('selected'));
-        div.classList.add('selected');
-        selectedImage = imgUrl;
-        updateCounters();
-        checkSubmitEnabled();
-      });
-      imagesContainer.appendChild(div);
-    });
-
-    showSuccess('generateSuccess', 'Content generated successfully!');
-    
-  } catch (error) {
-    console.error('Generation error:', error);
-    hideLoading('captionsLoading');
-    hideLoading('imagesLoading');
-    showError('generateError', `Failed to generate content: ${error.message}`);
-    document.getElementById('captionsEmpty').style.display = 'block';
-    document.getElementById('imagesEmpty').style.display = 'block';
-  }
-});
-
-// ===========================
-// 📤 Submit Button
-// ===========================
-document.getElementById('submit').addEventListener('click', async () => {
-  if (!selectedCaption || !selectedImage || !selectedSchedule) {
-    showError('submitError', 'Please select a caption, an image, and a schedule');
-    return;
-  }
-
-  // Show loading state
-  const submitBtn = document.getElementById('submit');
-  const originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = '<span>⏳ Submitting...</span>';
-  submitBtn.disabled = true;
-
-  // Show loading message
-  showLoadingMessage('submitSuccess', 'Submitting your Instagram post...');
-
-  // Convert schedule to ISO 8601
-  const scheduleISO = new Date(selectedSchedule).toISOString();
-
-  const payload = {
-    caption: selectedCaption,
-    imageUrl: selectedImage,
-    postTime: scheduleISO
-  };
-
-  console.log('Sending selection:', payload);
-
-  try {
-    const res = await fetch('https://n8nai.ai8mations.com/webhook/selection1', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    // Clear loading state
-    submitBtn.innerHTML = originalText;
-    hideLoadingMessage('submitSuccess');
-
-    if (res.ok) {
-      showSuccess('submitSuccess', 'Caption and image submitted for posting! Refresh the page to generate new content.');
-      disableInterfaceAfterSubmission();
-    } else {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-  } catch (error) {
-    console.error('Submission error:', error);
-
-    // Clear loading state
-    submitBtn.innerHTML = originalText;
-    submitBtn.disabled = false;
-    hideLoadingMessage('submitSuccess');
-
-    showError('submitError', `Failed to submit selection: ${error.message}`);
-  }
-});
-
-// ===========================
-// 🚫 Disable Interface After Submission
-// ===========================
-function disableInterfaceAfterSubmission() {
-  // Disable all sections
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(section => {
-    section.classList.add('disabled');
-  });
-
-  // Hide submit section and show refresh section
-  document.getElementById('submit').style.display = 'none';
-  document.getElementById('refreshSection').style.display = 'block';
-
-  // Add disabled overlay to main sections
-  const mainSections = document.querySelectorAll('.section:not(.pending-posts)');
-  mainSections.forEach(section => {
-    const overlay = document.createElement('div');
-    overlay.className = 'disabled-overlay';
-    overlay.innerHTML = `
-      <div class="disabled-message">
-        <div class="icon">✅</div>
-        <h4>Content Submitted</h4>
-        <p>Your Instagram post has been scheduled for automated publishing.</p>
-      </div>
-    `;
-    section.appendChild(overlay);
-  });
-}
-
-// Initialize empty states
-document.getElementById('captionsEmpty').style.display = 'block';
-document.getElementById('imagesEmpty').style.display = 'block';
-
-// ===========================
-// 🚨 Browser Close/Refresh Warning
-// ===========================
-window.addEventListener('beforeunload', function(e) {
-  // Check if there's any data that would be lost
-  const hasTopic = document.getElementById('topic').value.trim();
-  const hasSelections = selectedCaption || selectedImage || selectedSchedule;
-
-  if (hasTopic || hasSelections) {
-    // Cancel the event
-    e.preventDefault();
-    // Chrome requires returnValue to be set
-    e.returnValue = '';
-
-    // Show custom confirmation dialog
-    const userChoice = confirm(
-      '⚠️ WARNING: You are about to leave this page!\n\n' +
-      'All current data including:\n' +
-      '• Entered topic\n' +
-      '• Generated captions and images\n' +
-      '• Selected content\n' +
-      '• Scheduled posting time\n\n' +
-      'Will be permanently deleted and reset.\n\n' +
-      'Click "OK" to continue and lose all data, or "Cancel" to stay on this page.'
-    );
-
-    // If user clicks Cancel, prevent the navigation
-    if (!userChoice) {
-      return false;
-    }
   }
 });
 </script>
