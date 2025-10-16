@@ -1,17 +1,15 @@
-import { NextResponse } from 'next/server';
-
 export function middleware(request) {
-  const { pathname } = request.nextUrl;
-
+  const url = request.nextUrl.clone();
+  
   // Protect dashboard route
-  if (pathname === '/dashboard.html') {
+  if (url.pathname === '/dashboard.html') {
     const token = request.cookies.get('hana_token');
-
+    
     if (!token) {
-      // Redirect to home page if not authenticated
-      return NextResponse.redirect(new URL('/', request.url));
+      url.pathname = '/';
+      return Response.redirect(url);
     }
   }
-
-  return NextResponse.next();
+  
+  return;
 }
