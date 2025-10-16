@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation - HANA Instagram Automation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-dark: #0f172a;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #10b981;
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: var(--bg-primary);
+      box-shadow: var(--shadow-sm);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+    }
+
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .cta-button {
+      background: var(--gradient);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: transform 0.2s;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Documentation Section */
+    .documentation {
+      padding: 120px 0 80px;
+      background: var(--bg-secondary);
+    }
+
+    .documentation .container {
+      max-width: 1000px;
+    }
+
+    .doc-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .doc-header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+      letter-spacing: -1px;
+    }
+
+    .doc-header .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .doc-content {
+      display: grid;
+      gap: 48px;
+    }
+
+    .doc-section {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .doc-section h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doc-section h2 i {
+      color: var(--accent);
+    }
+
+    .doc-section h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 32px 0 16px 0;
+      color: var(--text-primary);
+    }
+
+    .doc-section p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin: 32px 0;
+    }
+
+    .feature-card {
+      background: var(--bg-tertiary);
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .feature-card h4 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-card h4 i {
+      color: var(--accent);
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .step-list {
+      margin: 24px 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .step-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .step-content p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .code-block {
+      background: var(--bg-dark);
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.9rem;
+      margin: 16px 0;
+      overflow-x: auto;
+      border: 1px solid var(--border-dark);
+    }
+
+    .highlight {
+      background: var(--accent-light);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .warning {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 20px 0;
+    }
+
+    .warning h4 {
+      color: var(--error);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .warning h4 i {
+      font-size: 1.2rem;
+    }
+
+    .warning p {
+      color: var(--text-secondary);
+    }
+
+    .contact-section {
+      text-align: center;
+      background: var(--gradient);
+      color: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-top: 48px;
+    }
+
+    .contact-section h3 {
+      font-size: 1.75rem;
+      margin-bottom: 16px;
+    }
+
+    .contact-section p {
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+
+    .contact-btn {
+      background: white;
+      color: var(--accent);
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    footer {
+      background: var(--bg-dark);
+      color: white;
+      padding: 64px 0 32px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-section h4 {
+      font-size: 1.125rem;
+      margin-top: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: rgb(111, 111, 111);
+    }
+
+    .footer-section p,
+    .footer-section a {
+      color: var(--text-muted);
+      text-decoration: none;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .footer-section a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-dark);
+      padding-top: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
+      .doc-header h1 {
+        font-size: 2.5rem;
+      }
+
+      .doc-section {
+        padding: 24px;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .step-number {
+        align-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-robot"></i>
+        HANA
+      </a>
+      <div class="nav-links">
+        <a href="index.html">HOME</a>
+        <a href="dashboard.html">DASHBOARD</a>
+        <a href="#" class="cta-button">LOGIN</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Documentation Section -->
+  <section class="documentation">
+    <div class="container">
+      <div class="doc-header">
+        <h1>Documentation</h1>
+        <p class="subtitle">Complete guide to using HANA - your AI-powered Instagram automation platform</p>
+      </div>
+
+      <div class="doc-content">
+        <!-- Overview -->
+        <div class="doc-section">
+          <h2><i class="fas fa-info-circle"></i> Overview</h2>
+          <p><strong>HANA (Instagram Automation)</strong> is a professional SaaS platform that leverages artificial intelligence to streamline Instagram content creation and scheduling. Our platform combines cutting-edge AI technology with intuitive design to help content creators, businesses, and influencers maintain consistent, engaging social media presence.</p>
+
+          <p>The platform integrates with N8N workflow automation and AI services to generate high-quality captions and images based on user-defined topics, then schedules posts for optimal engagement timing.</p>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <h4><i class="fas fa-brain"></i> AI-Powered Content</h4>
+              <p>Advanced AI algorithms generate engaging captions and relevant images tailored to your brand and audience.</p>
+            </div>
+            <div class="feature-card">
+              <h4><i class="fas fa-clock"></i> Smart Scheduling</h4>
+              <p>Intelligent posting schedules optimized for maximum engagement across different time zones.</p>
+            </div>
+            <div class="feature-card">
+              <h4><i class="fas fa-shield-alt"></i> Secure & Private</h4>
+              <p>Enterprise-grade security with encrypted data transmission and secure authentication.</p>
+            </div>
+            <div class="feature-card">
+              <h4><i class="fas fa-mobile-alt"></i> Responsive Design</h4>
+              <p>Fully responsive interface that works seamlessly across desktop, tablet, and mobile devices.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div class="doc-section">
+          <h2><i class="fas fa-play-circle"></i> Getting Started</h2>
+
+          <h3>Prerequisites</h3>
+          <p>Before using HANA, ensure you have:</p>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <li>A modern web browser (Chrome, Firefox, Safari, Edge)</li>
+            <li>Active internet connection</li>
+            <li>Instagram business or creator account (for posting)</li>
+          </ul>
+
+          <h3>Quick Start Guide</h3>
+          <div class="step-list">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Access the Platform</h4>
+                <p>Navigate to the HANA dashboard and log in with your credentials. The default login is <span class="highlight">sent to your inbox</span> for demo purposes.</p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Enter Your Topic</h4>
+                <p>In the content generation section, enter a topic or theme for your Instagram post. Be specific to get better results.</p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Generate Content</h4>
+                <p>Click the "Generate" button to create AI-powered captions and images based on your topic.</p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Select & Schedule</h4>
+                <p>Choose your preferred caption and image, then select a posting time. The platform supports multiple timezones.</p>
+              </div>
+            </div>
+
+            <div class="step">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <h4>Submit & Automate</h4>
+                <p>Submit your selection and let HANA handle the automated posting to your Instagram account.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div class="doc-section">
+          <h2><i class="fas fa-star"></i> Features</h2>
+
+          <h3>Content Generation</h3>
+          <p>Our AI-powered content generation creates:</p>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <li><strong>Captions:</strong> Engaging, relevant text optimized for Instagram engagement</li>
+            <li><strong>Images:</strong> High-quality visuals in 9:16 aspect ratio perfect for Instagram Stories and Reels</li>
+            <li><strong>Hashtags:</strong> Trending and relevant hashtags included in captions</li>
+          </ul>
+
+          <h3>Smart Scheduling</h3>
+          <p>Advanced scheduling features include:</p>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <!-- <li><strong>Timezone Support:</strong> Schedule posts in different timezones (Japan, Philippines, US, Europe, Australia)</li> -->
+            <li><strong>Real-time Clock:</strong> Live display of current times in multiple locations</li>
+            <li><strong>Future Scheduling:</strong> Schedule posts weeks or months in advance</li>
+          </ul>
+
+          <h3>User Interface</h3>
+          <p>Modern, intuitive interface with:</p>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <li><strong>Dark/Light Theme:</strong> Toggle between themes for comfortable viewing</li>
+            <li><strong>Custom Captions:</strong> Add your own captions alongside AI-generated ones</li>
+            <li><strong>Visual Selection:</strong> Easy-to-use interface for selecting content</li>
+            <li><strong>Progress Tracking:</strong> Real-time feedback on generation and submission status</li>
+          </ul>
+
+          <h3>Workflow Integration</h3>
+          <p>The complete automation workflow follows this streamlined process:</p>
+          <div style="background: var(--bg-tertiary); padding: 20px; border-radius: 8px; margin: 16px 0;">
+            <strong>User Input</strong> → <strong>N8N Backend</strong> → <strong>AI Content Generation</strong> → <strong>User Selection</strong> → <strong>Scheduling</strong> → <strong>Instagram Posting</strong>
+          </div>
+          <p>This end-to-end automation ensures consistent, high-quality content delivery with minimal manual intervention.</p>
+        </div>
+
+
+        <!-- Troubleshooting -->
+        <div class="doc-section">
+          <h2><i class="fas fa-tools"></i> Troubleshooting</h2>
+
+          <h3>Common Issues</h3>
+
+          <div class="warning">
+            <h4><i class="fas fa-exclamation-triangle"></i> Content Generation Fails</h4>
+            <p>If content generation fails, check your internet connection and try again. The AI service may be temporarily unavailable. Check the status of our service providers:</p>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+              <li><a href="https://status.openai.com/" target="_blank" style="color: var(--accent);">OpenAI Status</a></li>
+              <li><a href="https://status.higgsfield.ai/" target="_blank" style="color: var(--accent);">Higgsfield AI Status</a></li>
+              <li><a href="https://status.n8n.cloud/" target="_blank" style="color: var(--accent);">N8N Status</a></li>
+            </ul>
+          </div>
+
+          <div class="warning">
+            <h4><i class="fas fa-exclamation-triangle"></i> Login Issues</h4>
+            <p>For demo purposes, use <span class="highlight">the credentials sent to your inbox</span> to check if you're using the right login information.</p>
+          </div>
+
+          <h3>Browser Compatibility</h3>
+          <p>HANA works best with modern browsers:</p>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <li>Chrome 90+</li>
+            <li>Firefox 88+</li>
+            <li>Safari 14+</li>
+            <li>Edge 90+</li>
+          </ul>
+
+          <h3>Performance Tips</h3>
+          <ul style="margin-left: 20px; margin-bottom: 16px;">
+            <li>Use specific, descriptive topics for better AI results</li>
+            <li>Schedule posts during optimal engagement times</li>
+            <li>Clear browser cache if experiencing issues</li>
+          </ul>
+        </div>
+
+        <!-- Contact -->
+        <div class="contact-section">
+          <h3>Need Help?</h3>
+          <p>Have questions or need assistance? Contact our support team.</p>
+          <a href="#contact" class="contact-btn">Get Support</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>HANA</h4>
+          <p>Professional Instagram automation platform powered by AI.<br> Create, schedule, and grow your social media presence effortlessly.</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 HANA. Demo Version - Made by Paolo L. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IG Automation Tool (HANA)</title>
+  <title>HANA - Professional Instagram Automation SaaS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     * {
       margin: 0;
@@ -13,90 +14,578 @@
     }
 
     :root {
-      --bg-primary: #000000;
-      --bg-secondary: #111111;
-      --bg-tertiary: #1a1a1a;
-      --text-primary: #ffffff;
-      --text-secondary: #b0b0b0;
-      --accent: #ffffff;
-      --border: #333333;
-      --error: #ff4444;
-      --success: #44ff44;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-dark: #0f172a;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #10b981;
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-primary);
+      background-color: var(--bg-secondary);
       color: var(--text-primary);
       line-height: 1.6;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
       width: 100%;
     }
 
-    header {
-      padding: 40px 0;
+    /* Navigation */
+    .navbar {
+      background: var(--bg-primary);
+      box-shadow: var(--shadow-sm);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+    }
+
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .cta-button {
+      background: var(--gradient);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: transform 0.2s;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero {
+      background: var(--gradient);
+      color: white;
+      padding: 80px 0 60px;
+      margin-top: 80px;
       text-align: center;
     }
 
-    h1 {
-      font-weight: 600;
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      letter-spacing: -0.5px;
+    .hero-title {
+      margin-bottom: 60px;
     }
 
-    .subtitle {
-      color: var(--text-secondary);
-      font-size: 1.1rem;
-      font-weight: 300;
+    .hero-title h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+      line-height: 1.1;
     }
 
-    main {
-      flex: 1;
-      padding: 20px 0 60px;
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 40px;
-      max-width: 1400px;
+    .hero-title .subtitle {
+      font-size: 1.25rem;
+      font-weight: 400;
+      opacity: 0.9;
+      line-height: 1.6;
+      max-width: 600px;
       margin: 0 auto;
     }
 
-    .main-content {
+    .hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+      max-width: 1200px;
+      padding: 0 40px;
+    }
+
+    .hero-features,
+    .login-form {
+      width: 100%;
+    }
+
+    .hero-features {
       display: flex;
       flex-direction: column;
+      gap: 16px;
     }
 
-    .instructions-panel {
-      position: sticky;
-      top: 20px;
-      height: fit-content;
-    }
-
-    .section {
-      margin-bottom: 40px;
-      background-color: var(--bg-secondary);
+    .hero-feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 12px;
-      padding: 30px;
-      border: 1px solid var(--border);
+      padding: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .hero-feature-card:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .hero-feature-text h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .hero-feature-text p {
+      font-size: 0.875rem;
+      opacity: 0.9;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+
+    .hero-feature-card a {
+      display: inline-block;
+      padding: 8px 16px;
+      background: white;
+      color: var(--accent);
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .hero-feature-card a:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Login Modal */
+    .login-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-modal.active {
+      display: flex;
+    }
+
+    .login-modal-content {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      max-width: 400px;
+      width: 90%;
+      position: relative;
+    }
+
+    .login-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .login-modal-close:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .login-modal h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-primary);
       text-align: center;
     }
 
-    .section-title {
-      font-size: 1.3rem;
+    .login-modal .subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
       font-weight: 500;
-      margin-bottom: 20px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+    }
+
+    .form-group input {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      background: var(--bg-secondary);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .login-btn {
+      padding: 12px 24px;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-error {
+      color: var(--error);
+      font-size: 0.875rem;
+      text-align: center;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .login-error.active {
+      display: block;
+    }
+
+    /* Login Form */
+    .login-form {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-form h3 {
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .login-form .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-top: 8px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .login-links {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .login-links a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .login-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 80px 0;
+      background: var(--bg-primary);
+    }
+
+    .features .container {
+      text-align: center;
+    }
+
+    .features h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .features .subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 64px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-bottom: 64px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      font-size: 2rem;
+      margin: 0 auto 16px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Dashboard Section */
+    .dashboard {
+      padding: 80px 0;
+      background: var(--bg-secondary);
+    }
+
+    .dashboard .container {
+      max-width: 1400px;
+    }
+
+    .dashboard h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .dashboard .subtitle {
+      text-align: center;
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 64px;
+    }
+
+    .dashboard-content {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 40px;
+    }
+
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .sidebar {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+    }
+
+    .sidebar h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .sidebar .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-primary);
+    }
+
+    .section-title i {
+      color: var(--accent);
     }
 
     .input-group {
@@ -145,9 +634,9 @@
     }
 
     button {
-      padding: 15px 30px;
-      background-color: var(--accent);
-      color: var(--bg-primary);
+      padding: 12px 24px;
+      background: var(--gradient);
+      color: white;
       border: none;
       border-radius: 8px;
       font-size: 1rem;
@@ -158,11 +647,12 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      box-shadow: var(--shadow-sm);
     }
 
-    button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     button:active {
@@ -170,20 +660,23 @@
     }
 
     button:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
       transform: none;
+      box-shadow: none;
     }
 
-    .button-secondary {
-      background-color: transparent;
+    .btn-outline {
+      background: transparent;
       color: var(--accent);
-      border: 1px solid var(--accent);
+      border: 2px solid var(--accent);
+      box-shadow: none;
     }
 
-    .button-secondary:hover {
-      background-color: var(--accent);
-      color: var(--bg-primary);
+    .btn-outline:hover:not(:disabled) {
+      background: var(--accent);
+      color: white;
+      box-shadow: var(--shadow-md);
     }
 
     .caption-item, .image-item {
@@ -337,38 +830,119 @@
     }
 
     footer {
-      background-color: var(--bg-secondary);
-      padding: 30px 0;
-      text-align: center;
-      border-top: 1px solid var(--border);
-      color: var(--text-secondary);
-      font-size: 0.9rem;
+      background: var(--bg-dark);
+      color: white;
+      padding: 64px 0 32px;
+      margin-top: 80px;
     }
 
     .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-section h4 {
+      font-size: 1.125rem;
+      margin-top: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: rgb(111, 111, 111);
+    }
+
+    .footer-section p,
+    .footer-section a {
+      color: var(--text-muted);
+      text-decoration: none;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .footer-section a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-dark);
+      padding-top: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 32px;
+    }
+
+    .social-links {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .social-links a:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-2px);
     }
 
     @media (max-width: 768px) {
-      main {
+      .navbar .container {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      .hero-title h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero .container {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 40px;
+        text-align: center;
       }
 
-      .instructions-panel {
+      .hero-features {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .login-form {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
         position: static;
-        order: -1;
-      }
-
-      h1 {
-        font-size: 2rem;
       }
 
       .section {
-        padding: 20px;
-        margin-bottom: 30px;
+        padding: 24px;
+        margin-bottom: 24px;
       }
 
       .input-group {
@@ -387,6 +961,11 @@
 
       img {
         max-width: 100%;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
       }
     }
 
@@ -573,200 +1152,118 @@
   </style>
 </head>
 <body>
-  <header>
+  <!-- Navigation -->
+  <nav class="navbar">
     <div class="container">
-      <h1>IG Automation Tool (HANA)</h1>
-      <p class="subtitle">Generate and select Instagram content with AI</p>
+      <a href="#" class="logo">
+        <i class="fas fa-robot"></i>
+        HANA
+      </a>
+      <div class="nav-links">
+        <a href="documentation.html">DOCUMENTATION</a>
+        <a href="#" class="cta-button">LOGIN</a>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <main>
-    <div class="main-content">
-      <div class="container">
-        <div class="section">
-        <h2 class="section-title">
-          📝 Content Generation
-        </h2>
-        <div class="input-group">
-          <textarea id="topic" placeholder="Enter your topic or idea..."></textarea>
-          <button id="generate">
-            <span>Generate</span>
-          </button>
-        </div>
-        <div class="error-message" id="generateError"></div>
-        <div class="success-message" id="generateSuccess"></div>
-      </div>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-title">
+      <h1>IG Content Generator and Scheduler</h1>
+      <p class="subtitle">Generate engaging content, schedule posts, and grow your audience with AI-powered automation.</p>
+    </div>
 
-      <div class="section">
-        <h2 class="section-title">
-          💬 Choose a Caption
-          <span class="selection-counter" id="captionCounter">0 selected</span>
-        </h2>
-        <div class="loading" id="captionsLoading">
-          <div class="spinner"></div>
-          <p>Generating captions...</p>
+    <div class="container">
+      <div class="hero-features">
+        <div class="hero-feature-card">
+          <div class="hero-feature-text">
+            <h3>Start Generation</h3>
+            <p>Begin generating AI-powered Instagram content.</p>
+            <a href="dashboard.html">Get Started</a>
+          </div>
         </div>
-        <div class="empty-state" id="captionsEmpty">
-          Enter a topic and click Generate to see caption options
-        </div>
-        <div id="captions" class="content-grid"></div>
-      </div>
 
-      <div class="section">
-        <h2 class="section-title">
-          🖼️ Choose an Image
-          <span class="selection-counter" id="imageCounter">0 selected</span>
-        </h2>
-        <div class="loading" id="imagesLoading">
-          <div class="spinner"></div>
-          <p>Generating images...</p>
+        <div class="hero-feature-card">
+          <div class="hero-feature-text">
+            <h3>Documentation</h3>
+            <p>Access the documentation, guide and tutorials.</p>
+            <a href="documentation.html">View Docs</a>
+          </div>
         </div>
-        <div class="empty-state" id="imagesEmpty">
-          Enter a topic and click Generate to see image options
-        </div>
-        <div id="images" class="content-grid"></div>
-      </div>
 
-      <div class="section">
-        <h2 class="section-title">
-          ⏰ Choose Posting Time
-          <span class="selection-counter" id="timeCounter">0 selected</span>
-        </h2>
-        <div class="time-info">
-          <p>Current Time in Philippines: <span id="timePH"></span></p>
-          <p>Current Time in Japan: <span id="timeJP"></span></p>
-        </div>
-        <div class="input-group">
-          <label for="schedulePicker">Select posting time:</label>
-          <input type="datetime-local" id="schedulePicker">
+        <div class="hero-feature-card">
+          <div class="hero-feature-text">
+            <h3>Contact Support</h3>
+            <p>Get help from Paolo for any questions.</p>
+            <a href="#contact">Get Help</a>
+          </div>
         </div>
       </div>
 
-      <div class="submit-section">
-        <button id="submit" disabled>
-          Submit Selection
+      <div class="login-form">
+        <h3>Welcome Back</h3>
+        <p class="subtitle">Sign in to access your dashboard</p>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter your username" required>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required>
+          </div>
+
+          <button type="submit" class="login-btn">Sign In</button>
+        </form>
+
+        <div class="login-links">
+          <a href="#forgot">Forgot password?</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="login-modal">
+    <div class="login-modal-content">
+      <button class="login-modal-close" id="loginModalClose">&times;</button>
+      <h2>Welcome Back</h2>
+      <p class="subtitle">Sign in to access your HANA dashboard</p>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="loginUsername">Username</label>
+          <input type="text" id="loginUsername" required>
+        </div>
+
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span id="loginBtnText">Sign In</span>
         </button>
-        <div class="error-message" id="submitError"></div>
-        <div class="success-message" id="submitSuccess"></div>
-      </div>
 
-      <div class="refresh-section" id="refreshSection">
-        <button id="refreshBtn" onclick="location.reload()">
-          🔄 Generate New Content
-        </button>
-      </div>
-
-      <div class="section pending-posts">
-        <h2>📋 PENDING INSTAGRAM POSTS</h2>
-        
-        <table class="posts-table">
-          
-          <thead>
-            <p>( Sample data only )</p><br>
-            <tr>
-              <th>Date Generated</th>
-              <th>Caption</th>
-              <th>Image Link</th>
-              <th>Post Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>2025-10-10 08:30:00</td>
-              <td>Exploring the vibrant streets of Tokyo at night 🌃✨</td>
-              <td><a href="https://zzz1uzz.com/image1.jpg" target="_blank">View Image</a></td>
-              <td>2025-10-10 15:00:00</td>
-            </tr>
-            <tr>
-              <td>2025-10-09 14:20:00</td>
-              <td>Coffee and creativity in the morning ☕🎨</td>
-              <td><a href="https://zzz1uzz.com/image2.jpg" target="_blank">View Image</a></td>
-              <td>2025-10-11 09:30:00</td>
-            </tr>
-            <tr>
-              <td>2025-10-08 16:45:00</td>
-              <td>Sunset vibes and good times 🌅😊</td>
-              <td><a href="https://zzz1uzz.com/image3.jpg" target="_blank">View Image</a></td>
-              <td>2025-10-12 18:00:00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      </div>
+        <div class="login-error" id="loginError"></div>
+      </form>
     </div>
+  </div>
 
-    <div class="instructions-panel">
-      <h3>🚀 How It Works (DEMO)</h3>
-      <p class="subtitle">Complete step-by-step guide to automate your Instagram posting</p>
-
-      <div class="step">
-        <div class="step-title">
-          <span class="step-number">1</span>
-          Enter Your Topic
-        </div>
-        <div class="step-description">
-          Start by entering a topic or idea in the text area. This will be used to generate relevant captions and images.
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-title">
-          <span class="step-number">2</span>
-          Generate Content
-        </div>
-        <div class="step-description">
-          Click "Generate" to send your topic to our AI system. The N8N backend will process your request and create multiple caption options and images.
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-title">
-          <span class="step-number">3</span>
-          Select Content
-        </div>
-        <div class="step-description">
-          Choose one caption and one image from the generated options. Both selections are required before you can proceed to scheduling.
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-title">
-          <span class="step-number">4</span>
-          Schedule Posting
-        </div>
-        <div class="step-description">
-          Pick a future date and time for your Instagram post. The system will automatically post on schedule.
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-title">
-          <span class="step-number">5</span>
-          Note for this Version
-        </div>
-        <div class="step-description">
-          For direct demo of the workflow, the scheduling logic has not been implemented yet. It will be available on the next demo version.
-        </div>
-      </div>
-
-      <div class="workflow-diagram">
-        <strong>Workflow:</strong><br>
-        User Input → N8N Backend → AI Content Generation → User Selection → Scheduling → Instagram Posting
-      </div>
-
-      <div class="desktop-notice">
-        <div class="icon">💻</div>
-        <strong>Desktop Recommended:</strong><br>
-        For the best experience, it's recommended using this demo on a desktop computer. Mobile optimization will be implemented in Prod if needed. - Paolo
-      </div>
-    </div>
-  </main>
-
-  <footer>
+  <!-- Footer -->
     <div class="container">
       <div class="footer-content">
-        <p>Demo Version: IG Automation Tool - Made by Paolo L.</p>
+        <div class="footer-section">
+          <h4>HANA</h4>
+          <p>Professional Instagram automation platform powered by AI.<br> Create, schedule, and grow your social media presence effortlessly.</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 HANA. Demo Version - Made by Paolo L. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -774,6 +1271,81 @@
 
 
 <script>
+// Login Modal Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const loginModal = document.getElementById('loginModal');
+  const loginModalClose = document.getElementById('loginModalClose');
+  const loginBtn = document.querySelector('.cta-button');
+  const loginForm = document.getElementById('loginForm');
+  const loginBtnText = document.getElementById('loginBtnText');
+  const loginError = document.getElementById('loginError');
+
+  // Open login modal
+  loginBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    loginModal.classList.add('active');
+  });
+
+  // Close login modal
+  loginModalClose.addEventListener('click', function() {
+    loginModal.classList.remove('active');
+    loginError.classList.remove('active');
+    loginForm.reset();
+  });
+
+  // Close modal when clicking outside
+  loginModal.addEventListener('click', function(e) {
+    if (e.target === loginModal) {
+      loginModal.classList.remove('active');
+      loginError.classList.remove('active');
+      loginForm.reset();
+    }
+  });
+
+  // Login form submission
+  loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // Show loading state
+    loginBtnText.textContent = 'Signing In...';
+    loginForm.querySelector('.login-btn').disabled = true;
+    loginError.classList.remove('active');
+
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Token is now stored in HTTP-only cookie by server
+        // Just redirect to dashboard (middleware will verify the cookie)
+        window.location.href = 'dashboard.html';
+      } else {
+        // Show error
+        loginError.textContent = data.error || 'Login failed';
+        loginError.classList.add('active');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      loginError.textContent = 'Network error. Please try again.';
+      loginError.classList.add('active');
+    } finally {
+      // Reset loading state
+      loginBtnText.textContent = 'Sign In';
+      loginForm.querySelector('.login-btn').disabled = false;
+    }
+  });
+});
+
 let selectedCaption = null;
 let selectedImage = null;
 let selectedSchedule = null;
@@ -888,7 +1460,7 @@ document.getElementById('generate').addEventListener('click', async () => {
   showLoading('imagesLoading');
 
   try {
-    const res = await fetch('https://n8nai.ai8mations.com/webhook/generate', {
+    const res = await fetch('https://n8nai.ai8mations.com/webhook-test/aoigenerate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic })

@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - HANA Instagram Automation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-dark: #0f172a;
+      --bg-card: #ffffff;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-light: #dbeafe;
+      --border: #e2e8f0;
+      --border-dark: #cbd5e1;
+      --error: #ef4444;
+      --success: #10b981;
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Dark Theme Variables */
+    [data-theme="dark"] {
+      --bg-primary: #1e293b;
+      --bg-secondary: #0f172a;
+      --bg-tertiary: #334155;
+      --bg-dark: #020617;
+      --bg-card: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --border-dark: #475569;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+     footer {
+      background: var(--bg-dark);
+      color: white;
+      padding: 64px 0 32px;
+      margin-top: 80px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-section h4 {
+      font-size: 1.125rem;
+      margin-top: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: rgb(111, 111, 111);
+    }
+
+    .footer-section p,
+    .footer-section a {
+      color: var(--text-muted);
+      text-decoration: none;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .footer-section a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-dark);
+      padding-top: 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 32px;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: var(--bg-primary);
+      box-shadow: var(--shadow-sm);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+    }
+
+    .navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-tertiary);
+    }
+
+    .theme-toggle i {
+      font-size: 1rem;
+    }
+
+    .cta-button {
+      background: var(--gradient);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: transform 0.2s;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .logout-btn {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    /* Dashboard Section */
+    .dashboard {
+      padding: 120px 0 80px;
+      background: var(--bg-secondary);
+    }
+
+    .dashboard .container {
+      max-width: 1200px;
+      padding: 0 40px;
+    }
+
+    .dashboard h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .dashboard .subtitle {
+      text-align: center;
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 64px;
+    }
+
+    .dashboard-content {
+      display: flex;
+      justify-content: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      width: 100%;
+    }
+
+    .sidebar h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .sidebar .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .section {
+      margin-bottom: 32px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-primary);
+    }
+
+    .section-title i {
+      color: var(--accent);
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 600px;
+      min-height: 120px;
+      padding: 20px;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+      resize: vertical;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 250px;
+      padding: 15px 20px;
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea:focus, input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    textarea::placeholder, input[type="text"]::placeholder {
+      color: var(--text-secondary);
+    }
+
+    button {
+      padding: 12px 24px;
+      background: var(--gradient);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      box-shadow: none;
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: var(--accent);
+      color: white;
+      box-shadow: var(--shadow-md);
+    }
+
+    .caption-item, .image-item {
+      border: 2px solid var(--border);
+      padding: 15px;
+      margin: 8px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      background-color: var(--bg-tertiary);
+    }
+
+    .caption-item:hover, .image-item:hover {
+      border-color: var(--text-secondary);
+      transform: translateY(-2px);
+    }
+
+    .caption-item.selected, .image-item.selected {
+      border-color: var(--accent);
+      background-color: var(--bg-secondary);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .caption-item {
+      display: inline-block;
+      max-width: 300px;
+      word-wrap: break-word;
+    }
+
+    .image-item {
+      display: inline-block;
+      padding: 5px;
+    }
+
+    img {
+      max-width: 300px;
+      height: auto;
+      border-radius: 6px;
+      display: block;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+      justify-items: center;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-message, .success-message {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .error-message {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    .success-message {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .error-message.active, .success-message.active {
+      display: block;
+    }
+
+    .submit-section {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .refresh-section {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .disabled-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      border-radius: 12px;
+    }
+
+    .disabled-message {
+      background-color: var(--bg-secondary);
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .disabled-message .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .disabled-message h4 {
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .disabled-message p {
+      color: var(--text-secondary);
+      margin-bottom: 15px;
+    }
+
+    .section.disabled {
+      position: relative;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .selection-counter {
+      background-color: var(--bg-tertiary);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .pending-posts {
+      margin-top: 60px;
+    }
+
+    .pending-posts h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .posts-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .posts-table th,
+    .posts-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .posts-table th {
+      background-color: var(--bg-tertiary);
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .posts-table td {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .posts-table tbody tr:hover {
+      background-color: var(--bg-tertiary);
+    }
+
+    .posts-table a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .posts-table a:hover {
+      text-decoration: underline;
+    }
+
+    .no-posts {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .time-info {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: var(--bg-tertiary);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .timezone-selector {
+      margin-bottom: 15px;
+    }
+
+    .timezone-selector select {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .time-info p {
+      margin: 8px 0;
+      font-size: 1rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .datetime-input-group {
+      margin-top: 15px;
+    }
+
+    .datetime-input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .datetime-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .timezone-select-group {
+      flex: 0 0 auto;
+      min-width: 180px;
+    }
+
+    .timezone-select-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .timezone-select-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .datetime-input-group input[type="datetime-local"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .datetime-input-group input[type="datetime-local"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .step {
+      margin-bottom: 16px;
+      padding: 16px;
+      background-color: var(--bg-tertiary);
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .step:nth-child(even) {
+      background-color: var(--bg-primary);
+    }
+
+    .time-info p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .workflow-diagram {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: var(--bg-tertiary);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .workflow-diagram strong {
+      color: var(--accent);
+    }
+
+    .desktop-notice {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border: 1px solid var(--accent);
+    }
+
+    .desktop-notice .icon {
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .desktop-notice strong {
+      color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .navbar .container {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .section {
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+
+      .input-group {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input[type="text"] {
+        min-width: 100%;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+
+      img {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-robot"></i>
+        HANA
+      </a>
+      <div class="nav-links">
+        <a href="documentation.html">DOCUMENTATION</a>
+        <button class="theme-toggle" id="themeToggle">
+          <i class="fas fa-moon"></i>
+          <span id="themeText">Dark</span>
+        </button>
+        <a href="#" class="logout-btn" id="logoutBtn">LOGOUT</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Section -->
+  <section class="dashboard">
+    <div class="container">
+      <h1>Your Content Dashboard</h1>
+      <p class="subtitle">Create, manage, and schedule your Instagram content with our intuitive dashboard.<br>View <a href="documentation.html" style="color: var(--accent); text-decoration: underline;">documentation</a> for a guide on how to use this website.</p>
+
+      <div class="dashboard-content">
+        <div class="main-panel">
+          <div class="section">
+            <h2 class="section-title">
+              <i class="fas fa-edit"></i>
+              Content Generation
+            </h2>
+            <div class="input-group">
+              <textarea id="topic" placeholder="Enter your topic or idea..."></textarea>
+              <button id="generate">
+                <span>Generate</span>
+              </button>
+            </div>
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 8px; text-align: center;">Don't like the current results? Generate new captions and images!</p>
+            <div class="error-message" id="generateError"></div>
+            <div class="success-message" id="generateSuccess"></div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <i class="fas fa-comment-dots"></i>
+              Choose a Caption
+              <span class="selection-counter" id="captionCounter">0 selected</span>
+            </h2>
+            <div class="loading" id="captionsLoading">
+              <div class="spinner"></div>
+              <p>Generating captions...</p>
+            </div>
+            <div class="empty-state" id="captionsEmpty">
+              Enter a topic and click Generate to see caption options
+            </div>
+            <div id="captions" class="content-grid"></div>
+
+            <div class="custom-caption-section" id="customCaptionSection" style="display: none; margin-top: 20px;">
+              <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Add your own caption:</h4>
+              <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <textarea id="customCaptionInput" placeholder="Write your own caption here..." style="flex: 1; min-height: 80px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; resize: vertical;"></textarea>
+                <button id="addCustomCaption" style="padding: 12px 20px; background: var(--gradient); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Add Caption</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <i class="fas fa-image"></i>
+              Choose an Image
+              <span class="selection-counter" id="imageCounter">0 selected</span>
+            </h2>
+            <div class="loading" id="imagesLoading">
+              <div class="spinner"></div>
+              <p>Generating images...</p>
+            </div>
+            <div class="empty-state" id="imagesEmpty">
+              Enter a topic and click Generate to see image options
+            </div>
+            <div id="images" class="content-grid"></div>
+          </div>
+
+          <div class="section">
+            <h2 class="section-title">
+              <i class="fas fa-clock"></i>
+              Choose Posting Time
+              <span class="selection-counter" id="timeCounter">0 selected</span>
+            </h2>
+            <div class="time-info">
+              <!-- <p>Current Time in Philippines: <span id="timePH"></span></p> -->
+              <p>Current Time in Japan: <span id="timeJP"></span></p>
+            </div>
+            <div class="datetime-input-group">
+              <label for="schedulePicker" style="display: block; text-align: center; margin-bottom: 8px;">Select posting time (Japan Standard Time - JST):</label>
+              <div style="display: flex; justify-content: center;">
+                <input type="datetime-local" id="schedulePicker" style="max-width: 300px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="submit-section">
+            <button id="submit" disabled>
+              Submit Selection
+            </button>
+            <div class="error-message" id="submitError"></div>
+            <div class="success-message" id="submitSuccess"></div>
+          </div>
+
+          <div class="refresh-section" id="refreshSection">
+            <button id="refreshBtn" onclick="location.reload()">
+              🔄 Generate New Content
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>HANA</h4>
+          <p>Professional Instagram automation platform powered by AI.<br> Create, schedule, and grow your social media presence effortlessly.</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 HANA. Demo Version - Made by Paolo L. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+      // Logout functionality (middleware handles authentication checks)
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoutBtn = document.getElementById('logoutBtn');
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+  
+          // Clear any client-side data and redirect to logout endpoint
+          fetch('/api/logout', { method: 'POST' })
+            .finally(() => {
+              // Redirect to home page (cookies will be cleared server-side)
+              window.location.href = 'index.html';
+            });
+        });
+      });
+  
+      let selectedCaption = null;
+      let selectedImage = null;
+      let selectedSchedule = null;
+      let isGenerating = false;
+
+    // ===========================
+    // ⏳ Display Current Time
+    // ===========================
+    function updateCurrentTime() {
+      const nowPH = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', hour12: false });
+      const nowJP = new Date().toLocaleString('en-US', { timeZone: 'Asia/Tokyo', hour12: false });
+
+      const timePH = document.getElementById('timePH');
+      const timeJP = document.getElementById('timeJP');
+
+      if (timePH) timePH.textContent = nowPH;
+      if (timeJP) timeJP.textContent = nowJP;
+    }
+    setInterval(updateCurrentTime, 1000);
+    updateCurrentTime();
+
+    // ===========================
+    // 🌍 Timezone (Fixed to JST)
+    // ===========================
+    const selectedTimezone = 'Asia/Tokyo'; // Fixed to Japan Standard Time
+
+    // ===========================
+    // 🕐 Timezone-Aware Datetime Conversion
+    // ===========================
+    function convertToTimezone(dateTimeString, targetTimezone) {
+      if (!dateTimeString) return null;
+
+      // Parse the datetime-local input (which is in local timezone)
+      const localDate = new Date(dateTimeString);
+
+      // Convert to target timezone
+      const targetTime = new Date(localDate.toLocaleString('en-US', { timeZone: targetTimezone }));
+
+      // Calculate the offset difference
+      const localOffset = localDate.getTimezoneOffset();
+      const targetOffset = new Date(localDate.toLocaleString('en-US', { timeZone: targetTimezone })).getTimezoneOffset();
+
+      // Adjust for the timezone difference
+      const adjustedTime = new Date(localDate.getTime() + (localOffset - targetOffset) * 60000);
+
+      return adjustedTime.toISOString();
+    }
+
+    // ===========================
+    // 🌙 Theme Toggle
+    // ===========================
+    const themeToggle = document.getElementById('themeToggle');
+    const themeText = document.getElementById('themeText');
+    const themeIcon = themeToggle.querySelector('i');
+
+    // Check for saved theme preference or default to light mode
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeToggle(currentTheme);
+
+    function updateThemeToggle(theme) {
+      if (theme === 'dark') {
+        themeIcon.className = 'fas fa-sun';
+        themeText.textContent = 'Light';
+      } else {
+        themeIcon.className = 'fas fa-moon';
+        themeText.textContent = 'Dark';
+      }
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateThemeToggle(newTheme);
+    });
+
+    // ===========================
+    // 🟩 Utility Functions
+    // ===========================
+    function showLoading(elementId) {
+      document.getElementById(elementId).classList.add('active');
+    }
+
+    function hideLoading(elementId) {
+      document.getElementById(elementId).classList.remove('active');
+    }
+
+    function showError(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.classList.add('active');
+      setTimeout(() => element.classList.remove('active'), 5000);
+    }
+
+    function showSuccess(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.classList.add('active');
+      setTimeout(() => element.classList.remove('active'), 3000);
+    }
+
+    function showLoadingMessage(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div class="spinner" style="width: 16px; height: 16px; border-width: 2px;"></div>
+          <span>${message}</span>
+        </div>
+      `;
+      element.classList.add('active');
+    }
+
+    function hideLoadingMessage(elementId) {
+      const element = document.getElementById(elementId);
+      element.classList.remove('active');
+      element.innerHTML = '';
+    }
+
+    function updateCounters() {
+      document.getElementById('captionCounter').textContent = selectedCaption ? '1 selected' : '0 selected';
+      document.getElementById('imageCounter').textContent = selectedImage ? '1 selected' : '0 selected';
+      document.getElementById('timeCounter').textContent = selectedSchedule ? '1 selected' : '0 selected';
+    }
+
+    function checkSubmitEnabled() {
+      document.getElementById('submit').disabled = !(selectedCaption && selectedImage && selectedSchedule);
+    }
+
+    function resetContent() {
+      document.getElementById('captions').innerHTML = '';
+      document.getElementById('images').innerHTML = '';
+      selectedCaption = null;
+      selectedImage = null;
+      selectedSchedule = null;
+      document.getElementById('schedulePicker').value = '';
+      document.getElementById('submit').disabled = true;
+      updateCounters();
+
+      // Show empty states
+      document.getElementById('captionsEmpty').style.display = 'block';
+      document.getElementById('imagesEmpty').style.display = 'block';
+
+      // Hide custom caption section
+      document.getElementById('customCaptionSection').style.display = 'none';
+    }
+
+    // Initialize time counter
+    updateCounters();
+
+    // ===========================
+    // ➕ Add Custom Caption Button
+    // ===========================
+    document.getElementById('addCustomCaption').addEventListener('click', () => {
+      const customCaption = document.getElementById('customCaptionInput').value.trim();
+      if (!customCaption) {
+        showError('generateError', 'Please enter a custom caption');
+        return;
+      }
+
+      // Create new caption item
+      const captionsContainer = document.getElementById('captions');
+      const div = document.createElement('div');
+      div.className = 'caption-item';
+      div.textContent = customCaption;
+      div.addEventListener('click', () => {
+        document.querySelectorAll('.caption-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedCaption = customCaption;
+        updateCounters();
+        checkSubmitEnabled();
+      });
+      captionsContainer.appendChild(div);
+
+      // Clear the input
+      document.getElementById('customCaptionInput').value = '';
+
+      // Show success message
+      showSuccess('generateSuccess', 'Custom caption added successfully!');
+    });
+
+    // ===========================
+    // 📅 Schedule Picker Listener
+    // ===========================
+    document.getElementById('schedulePicker').addEventListener('change', (e) => {
+      selectedSchedule = e.target.value;
+      checkSubmitEnabled();
+    });
+
+
+    // ===========================
+    // 🚀 Generate Button
+    // ===========================
+    document.getElementById('generate').addEventListener('click', async () => {
+      if (isGenerating) return; // Prevent multiple clicks
+
+      const topic = document.getElementById('topic').value.trim();
+
+      if (!topic) {
+        showError('generateError', 'Please enter a topic to generate content');
+        return;
+      }
+
+      isGenerating = true;
+      const generateBtn = document.getElementById('generate');
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = '<span>⏳ Generating...</span>';
+
+      resetContent();
+
+      document.getElementById('captionsEmpty').style.display = 'none';
+      document.getElementById('imagesEmpty').style.display = 'none';
+      showLoading('captionsLoading');
+      showLoading('imagesLoading');
+
+      try {
+        const res = await fetch('https://n8nai.ai8mations.com/webhook/aoigenerate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topic })
+        });
+
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+        const data = await res.json();
+
+        hideLoading('captionsLoading');
+        hideLoading('imagesLoading');
+
+        if (!data.captions || !data.images) throw new Error('Invalid response format from server');
+
+        // Captions
+        const captionsContainer = document.getElementById('captions');
+        data.captions.forEach(caption => {
+          const div = document.createElement('div');
+          div.className = 'caption-item';
+          div.textContent = caption;
+          div.addEventListener('click', () => {
+            document.querySelectorAll('.caption-item').forEach(el => el.classList.remove('selected'));
+            div.classList.add('selected');
+            selectedCaption = caption;
+            updateCounters();
+            checkSubmitEnabled();
+          });
+          captionsContainer.appendChild(div);
+        });
+
+        // Show custom caption section after generation
+        document.getElementById('customCaptionSection').style.display = 'block';
+
+        // Images
+        const imagesContainer = document.getElementById('images');
+        data.images.forEach(imgUrl => {
+          const div = document.createElement('div');
+          div.className = 'image-item';
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.alt = 'Generated image';
+          img.onerror = () => {
+            img.style.display = 'none';
+            div.innerHTML += '<p style="color: var(--error);">Image failed to load</p>';
+          };
+          div.appendChild(img);
+          div.addEventListener('click', () => {
+            document.querySelectorAll('.image-item').forEach(el => el.classList.remove('selected'));
+            div.classList.add('selected');
+            selectedImage = imgUrl;
+            updateCounters();
+            checkSubmitEnabled();
+          });
+          imagesContainer.appendChild(div);
+        });
+
+        showSuccess('generateSuccess', 'Content generated successfully!');
+
+      } catch (error) {
+        console.error('Generation error:', error);
+        hideLoading('captionsLoading');
+        hideLoading('imagesLoading');
+        showError('generateError', `Failed to generate content: ${error.message}`);
+        document.getElementById('captionsEmpty').style.display = 'block';
+        document.getElementById('imagesEmpty').style.display = 'block';
+      } finally {
+        isGenerating = false;
+        const generateBtn = document.getElementById('generate');
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<span>Generate</span>';
+      }
+    });
+
+    // ===========================
+    // 📤 Submit Button
+    // ===========================
+    document.getElementById('submit').addEventListener('click', async () => {
+      if (!selectedCaption || !selectedImage || !selectedSchedule) {
+        showError('submitError', 'Please select a caption, an image, and a schedule');
+        return;
+      }
+
+      // Show loading state
+      const submitBtn = document.getElementById('submit');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<span>⏳ Submitting...</span>';
+      submitBtn.disabled = true;
+
+      // Show loading message
+      showLoadingMessage('submitSuccess', 'Submitting your Instagram post...');
+
+      // Convert schedule to selected timezone, then to ISO 8601 UTC
+      const scheduleInTimezone = convertToTimezone(selectedSchedule, selectedTimezone);
+
+      const payload = {
+        caption: selectedCaption,
+        imageUrl: selectedImage,
+        postTime: scheduleInTimezone,
+        timezone: selectedTimezone // Always JST
+      };
+
+      console.log('Sending selection:', payload);
+      console.log('Original time:', selectedSchedule);
+      console.log('Converted to timezone:', selectedTimezone, '->', scheduleInTimezone);
+
+      try {
+        const res = await fetch('https://n8nai.ai8mations.com/webhook/selection1', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        // Clear loading state
+        submitBtn.innerHTML = originalText;
+        hideLoadingMessage('submitSuccess');
+
+        if (res.ok) {
+          showSuccess('submitSuccess', 'Caption and image submitted for posting! Refresh the page to generate new content.');
+          disableInterfaceAfterSubmission();
+        } else {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+      } catch (error) {
+        console.error('Submission error:', error);
+
+        // Clear loading state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        hideLoadingMessage('submitSuccess');
+
+        showError('submitError', `Failed to submit selection: ${error.message}`);
+      }
+    });
+
+    // ===========================
+    // 🚫 Disable Interface After Submission
+    // ===========================
+    function disableInterfaceAfterSubmission() {
+      // Disable all sections
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.add('disabled');
+      });
+
+      // Hide submit section and show refresh section
+      document.getElementById('submit').style.display = 'none';
+      document.getElementById('refreshSection').style.display = 'block';
+
+      // Add disabled overlay to main sections
+      const mainSections = document.querySelectorAll('.section:not(.pending-posts)');
+      mainSections.forEach(section => {
+        const overlay = document.createElement('div');
+        overlay.className = 'disabled-overlay';
+        overlay.innerHTML = `
+          <div class="disabled-message">
+            <div class="icon">✅</div>
+            <h4>Content Submitted</h4>
+            <p>Your Instagram post has been scheduled for automated publishing.</p>
+          </div>
+        `;
+        section.appendChild(overlay);
+      });
+    }
+
+    // Initialize empty states
+    document.getElementById('captionsEmpty').style.display = 'block';
+    document.getElementById('imagesEmpty').style.display = 'block';
+
+    // ===========================
+    // 🚨 Browser Close/Refresh Warning
+    // ===========================
+    window.addEventListener('beforeunload', function(e) {
+      // Check if there's any data that would be lost
+      const hasTopic = document.getElementById('topic').value.trim();
+      const hasSelections = selectedCaption || selectedImage || selectedSchedule;
+
+      if (hasTopic || hasSelections) {
+        // Cancel the event
+        e.preventDefault();
+        // Chrome requires returnValue to be set
+        e.returnValue = '';
+
+        // Show custom confirmation dialog
+        const userChoice = confirm(
+          '⚠️ WARNING: You are about to leave this page!\n\n' +
+          'All current data including:\n' +
+          '• Entered topic\n' +
+          '• Generated captions and images\n' +
+          '• Selected content\n' +
+          '• Scheduled posting time\n\n' +
+          'Will be permanently deleted and reset.\n\n' +
+          'Click "OK" to continue and lose all data, or "Cancel" to stay on this page.'
+        );
+
+        // If user clicks Cancel, prevent the navigation
+        if (!userChoice) {
+          return false;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
