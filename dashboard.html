@@ -876,6 +876,14 @@
               Enter a topic and click Generate to see image options
             </div>
             <div id="images" class="content-grid"></div>
+
+            <div class="custom-image-section" id="customImageSection" style="display: none; margin-top: 20px;">
+              <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 10px; color: var(--text-primary);">Add your own image:</h4>
+              <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <input type="url" id="customImageInput" placeholder="Paste image URL here..." style="flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit;">
+                <button id="addCustomImage" style="padding: 12px 20px; background: var(--gradient); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Add Image</button>
+              </div>
+            </div>
           </div>
 
           <div class="section">
@@ -902,6 +910,13 @@
             </button>
             <div class="error-message" id="submitError"></div>
             <div class="success-message" id="submitSuccess"></div>
+          </div>
+
+          <div class="section" style="text-align: center; margin-top: 20px;">
+            <a href="https://docs.google.com/spreadsheets/d/1Vebw0HcMs9pFp5-Yjh_IeMmIcmaScQgxMrQS2QoxDaI/edit?gid=0#gid=0" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 500; font-size: 1.1rem;">
+              <i class="fas fa-external-link-alt" style="margin-right: 8px;"></i>
+              Click Here to view your PENDING UPLOADS
+            </a>
           </div>
 
           <div class="refresh-section" id="refreshSection">
@@ -1089,6 +1104,9 @@
 
       // Hide custom caption section
       document.getElementById('customCaptionSection').style.display = 'none';
+
+      // Hide custom image section
+      document.getElementById('customImageSection').style.display = 'none';
     }
 
     // Initialize time counter
@@ -1123,6 +1141,52 @@
 
       // Show success message
       showSuccess('generateSuccess', 'Custom caption added successfully!');
+    });
+
+    // ===========================
+    // ➕ Add Custom Image Button
+    // ===========================
+    document.getElementById('addCustomImage').addEventListener('click', () => {
+      const customImageUrl = document.getElementById('customImageInput').value.trim();
+      if (!customImageUrl) {
+        showError('generateError', 'Please enter a valid image URL');
+        return;
+      }
+
+      // Validate URL format
+      try {
+        new URL(customImageUrl);
+      } catch {
+        showError('generateError', 'Please enter a valid URL');
+        return;
+      }
+
+      // Create new image item
+      const imagesContainer = document.getElementById('images');
+      const div = document.createElement('div');
+      div.className = 'image-item';
+      const img = document.createElement('img');
+      img.src = customImageUrl;
+      img.alt = 'Custom image';
+      img.onerror = () => {
+        img.style.display = 'none';
+        div.innerHTML += '<p style="color: var(--error);">Image failed to load</p>';
+      };
+      div.appendChild(img);
+      div.addEventListener('click', () => {
+        document.querySelectorAll('.image-item').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedImage = customImageUrl;
+        updateCounters();
+        checkSubmitEnabled();
+      });
+      imagesContainer.appendChild(div);
+
+      // Clear the input
+      document.getElementById('customImageInput').value = '';
+
+      // Show success message
+      showSuccess('generateSuccess', 'Custom image added successfully!');
     });
 
     // ===========================
@@ -1193,6 +1257,9 @@
 
         // Show custom caption section after generation
         document.getElementById('customCaptionSection').style.display = 'block';
+
+        // Show custom image section after generation
+        document.getElementById('customImageSection').style.display = 'block';
 
         // Images
         const imagesContainer = document.getElementById('images');

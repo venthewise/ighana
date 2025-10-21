@@ -1179,7 +1179,7 @@
           <div class="hero-feature-text">
             <h3>Start Generation</h3>
             <p>Begin generating AI-powered Instagram content.</p>
-            <a href="dashboard.html">Get Started</a>
+            <a href="#" class="cta-button hero-login-btn">Login</a>
           </div>
         </div>
 
@@ -1253,18 +1253,18 @@
 document.addEventListener('DOMContentLoaded', function() {
   const loginModal = document.getElementById('loginModal');
   const loginModalClose = document.getElementById('loginModalClose');
-  const loginBtn = document.querySelector('.cta-button');
+  const loginBtns = document.querySelectorAll('.cta-button');
   const loginModalForm = document.getElementById('loginModalForm');
 
   // Open login modal
-  if (loginBtn) {
-    loginBtn.addEventListener('click', function(e) {
+  loginBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
       e.preventDefault();
       if (loginModal) {
         loginModal.classList.add('active');
       }
     });
-  }
+  });
 
   // Close login modal
   if (loginModalClose) {
@@ -1298,16 +1298,21 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Prevent form submission
+  // Hardcoded login function
   if (loginModalForm) {
     loginModalForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      // Since login is disabled, we just prevent the default action.
-      // You could optionally show a message here.
+      const username = document.getElementById('loginUsername').value;
+      const password = document.getElementById('loginPassword').value;
       const loginError = document.getElementById('loginError');
-      if (loginError) {
-        loginError.textContent = 'Login functionality is currently disabled.';
-        loginError.classList.add('active');
+
+      if (username === 'admin' && password === 'password123') {
+        window.location.href = 'dashboard.html';
+      } else {
+        if (loginError) {
+          loginError.textContent = 'Invalid username or password.';
+          loginError.classList.add('active');
+        }
       }
     });
   }
